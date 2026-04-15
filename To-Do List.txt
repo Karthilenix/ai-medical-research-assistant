@@ -1,0 +1,262 @@
+AI-Powered Medical Research Assistant – COMPLETE TO-DO LIST
+
+---
+
+## 🔰 PHASE 1: PROJECT SETUP & PLANNING
+
+[ ] 1. Create Project Root Folder
+- Name: ai-medical-research-assistant
+
+[ ] 2. Initialize Git Repository
+- git init
+- Create .gitignore (node_modules, env, **pycache**)
+
+[ ] 3. Create GitHub Repository
+- Push initial code
+- Maintain proper commits from start
+
+[ ] 4. Create Folder Structure
+
+```
+/client        → React frontend
+/server        → Node.js backend
+/ai-service    → FastAPI backend
+```
+
+---
+
+## ⚛️ PHASE 2: FRONTEND SETUP (REACT + TYPESCRIPT)
+
+[ ] 5. Initialize React App
+- npx create-react-app client --template typescript
+
+[ ] 6. Install Required Packages
+- axios
+- react-router-dom
+- tailwindcss
+
+[ ] 7. Setup Tailwind CSS
+- Configure tailwind.config.js
+
+[ ] 8. Create Basic Folder Structure
+
+```
+/components
+/pages
+/services
+/utils
+```
+
+[ ] 9. Build Core UI Components
+- Navbar
+- SearchBar
+- ContextForm (Disease, Query, Location)
+- ResultCard
+- InsightsPanel
+- Loader (skeleton)
+
+[ ] 10. Create Pages
+- Home Page
+- Dashboard Page
+
+[ ] 11. Setup API Service Layer
+- Create axios instance
+- Base URL config
+
+---
+
+## 🌐 PHASE 3: NODE.JS BACKEND (MAIN SERVER)
+
+[ ] 12. Initialize Node Server
+- npm init
+- Install express, cors, dotenv, mongoose
+
+[ ] 13. Setup Basic Server
+- Express app
+- Middleware (JSON, CORS)
+
+[ ] 14. Connect MongoDB Atlas
+- Create cluster
+- Connect using mongoose
+
+[ ] 15. Create Database Models
+
+```
+- User Model
+- Query Model
+- ChatHistory Model
+- Cache Model
+```
+
+[ ] 16. Setup Routes
+
+```
+- /api/query
+- /api/history
+- /api/cache
+```
+
+[ ] 17. Implement Controller Logic
+- Receive user input
+- Forward request to FastAPI
+- Return processed response
+
+---
+
+## 🧠 PHASE 4: FASTAPI (AI ENGINE)
+
+[ ] 18. Setup Python Environment
+- Create virtual environment
+- Install fastapi, uvicorn, requests, asyncio
+
+[ ] 19. Create FastAPI App
+- app.py
+- Setup basic routes
+
+[ ] 20. Implement Query Expansion Logic
+- Combine disease + query
+- Improve search terms
+
+[ ] 21. Integrate External APIs
+
+```
+- OpenAlex API
+- PubMed API
+- ClinicalTrials.gov API
+```
+
+[ ] 22. Implement Async Data Fetching
+- Use asyncio.gather()
+- Fetch 50–200 results
+
+[ ] 23. Build Filtering & Ranking System
+- Keyword matching
+- Recency scoring
+- Relevance scoring
+
+[ ] 24. Select Top Results
+- Limit to top 5–8
+
+[ ] 25. Integrate LLM (Phi-3 Mini)
+- Setup via Ollama or local inference
+- Use only for summarization
+
+[ ] 26. Generate AI Insights
+- Structured output (bullets)
+- No hallucination (use source grounding)
+
+[ ] 27. Create Final Response Format
+- Publications + Trials + Insights
+
+---
+
+## 🔗 PHASE 5: INTEGRATION (FRONTEND ↔ BACKEND)
+
+[ ] 28. Connect React with Node API
+- Send user query
+- Handle response
+
+[ ] 29. Connect Node with FastAPI
+- Axios/fetch call from Node → FastAPI
+
+[ ] 30. Display Results in UI
+- Map results to ResultCard
+- Show metadata properly
+
+[ ] 31. Display AI Insights
+- Highlighted section
+
+[ ] 32. Add Loading States
+- Skeleton loaders
+- Spinner
+
+---
+
+## 💾 PHASE 6: CACHING & OPTIMIZATION
+
+[ ] 33. Implement Caching in MongoDB
+- Store query + results
+
+[ ] 34. Check Cache Before API Call
+- If exists → return cached data
+
+[ ] 35. Optimize API Calls
+- Parallel requests
+- Reduce unnecessary calls
+
+[ ] 36. Optimize LLM Usage
+- Only for final insights
+- Keep prompts small
+
+---
+
+## 🧪 PHASE 7: TESTING
+
+[ ] 37. Test API Responses
+- Validate data structure
+
+[ ] 38. Test Edge Cases
+- Empty input
+- No results
+- API failure
+
+[ ] 39. Test Performance
+- Ensure response < 6 seconds
+
+---
+
+## 🚀 PHASE 8: DEPLOYMENT
+
+[ ] 40. Prepare Frontend for Deployment
+- npm run build
+
+[ ] 41. Deploy Frontend (Vercel)
+- Connect GitHub repo
+- Set environment variables
+
+[ ] 42. Deploy Node Backend (Render)
+- Setup service
+- Add env variables (Mongo URI, API URLs)
+
+[ ] 43. Deploy FastAPI (Render)
+- Separate service
+- Use uvicorn start command
+
+[ ] 44. Configure API URLs
+- Update frontend base URLs
+- Ensure CORS works
+
+---
+
+## 🔐 PHASE 9: FINAL POLISH
+
+[ ] 45. Add Error Handling UI
+- Show user-friendly messages
+
+[ ] 46. Improve UI/UX
+- Clean spacing
+- Better typography
+
+[ ] 47. Add README.md
+- Project overview
+- Setup steps
+- Tech stack
+
+[ ] 48. Push Final Code to GitHub
+- Clean commits
+- Proper folder structure
+
+---
+
+## 🎯 FINAL GOAL
+
+[ ] Working full-stack application
+[ ] Fast response time (3–6 sec)
+[ ] Clean UI/UX
+[ ] Accurate research results
+[ ] AI-generated insights
+[ ] Successfully deployed on Vercel + Render
+
+---
+
+END OF TO-DO LIST 🚀
