@@ -117,8 +117,15 @@ const Home: React.FC = () => {
       }
 
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      const errorTurn = {
+          query: data.query,
+          results: [],
+          insights: [`System Error: Unable to reach the AI Engine. Please check if your FastAPI service is awake and running properly! (${error?.message || 'Timeout'})`],
+          isFollowUp
+      };
+      setConversation(prev => [...prev, errorTurn]);
       setIsLoading(false);
     }
   };

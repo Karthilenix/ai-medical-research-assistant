@@ -25,7 +25,8 @@ exports.processQuery = async (req, res) => {
             }
         }
 
-        const fastApiUrl = process.env.FASTAPI_URL || 'http://127.0.0.1:8000';
+        // Sanitize the URL to prevent double-slashes causing 307 POST drops in Render
+        const fastApiUrl = (process.env.FASTAPI_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
         
         try {
             const response = await axios.post(`${fastApiUrl}/api/analyze`, {
@@ -33,7 +34,7 @@ exports.processQuery = async (req, res) => {
                 query,
                 location,
                 history: history || []
-            });
+            }, { timeout: 35000 }); // Enforce timeout so it doesn't hang forever
             
             const resultData = response.data;
             
