@@ -59,11 +59,12 @@ Do NOT include conversational words like "show", "tell me", "research", "clinica
 Respond ONLY with a 2-5 word keyword search string (e.g., "Lung Cancer Vitamin D"). Do not explain."""
 
     try:
+        headers = { "ngrok-skip-browser-warning": "true" }
         async with session.post(f"{OLLAMA_URL}/api/generate", json={
             "model": OLLAMA_MODEL,
             "prompt": prompt,
             "stream": False
-        }, timeout=10) as response:
+        }, headers=headers, timeout=10) as response:
             if response.status == 200:
                 data = await response.json()
                 s_query = data.get("response", "").strip(' \n"\'')
@@ -175,11 +176,12 @@ Rule 2: If the attached research is irrelevant or null, use your overarching med
 Rule 3: Provide exactly 3 concise, highly accurate bullet points, starting each with a dash."""
     
     try:
+        headers = { "ngrok-skip-browser-warning": "true" }
         async with session.post(f"{OLLAMA_URL}/api/generate", json={
             "model": OLLAMA_MODEL,
             "prompt": prompt,
             "stream": False
-        }, timeout=25) as response:
+        }, headers=headers, timeout=25) as response:
             if response.status == 200:
                 data = await response.json()
                 text = data.get("response", "")
