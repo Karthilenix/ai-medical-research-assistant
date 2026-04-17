@@ -42,18 +42,6 @@ exports.processQuery = async (req, res) => {
                if (!history || history.length === 0) {
                    await Cache.create({ cacheKey, data: resultData });
                }
-               // Optionally assign query to userId if authenticated
-               await Query.create({ disease, query, location, user: userId || null });
-               
-               // Save chat history turn
-               if (userId) {
-                  const ChatHistory = require('../models/ChatHistory');
-                  await ChatHistory.create({ 
-                      user: userId, 
-                      prompt: query, 
-                      response: resultData.insights.join(' ') 
-                  });
-               }
             } catch(e) {
                console.log("Failed to save to DB:", e.message);
             }
