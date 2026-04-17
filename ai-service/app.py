@@ -45,16 +45,16 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "phi3")
 
 async def expand_query_with_llm(session: aiohttp.ClientSession, disease: str, query: str, history: List[Message]) -> str:
     hist_text = "\n".join([f"{m.role}: {m.content}" for m in history[-3:]]) if history else "Start of conversation."
-    prompt = f"""You are an expert medical librarian. 
-Disease focus: {disease}
+    prompt = f"""You are a strict medical search keyword generator.
+Context Disease: {disease}
 Recent Conversation:
 {hist_text}
-User's Latest Query: {query}
+Latest User Query: {query}
 
-Instruction: Extract the CORE medical conditions and treatments to form a database search query. 
-IMPORTANT: If the User's Latest Query is about a completely different disease than the Disease Focus, completely ignore the Disease Focus! Focus entirely on the User's Latest Query.
-Do NOT include conversational words like "show", "tell me", "research", "clinical", "trials", or "find".
-Respond ONLY with a 2-5 word keyword search string (e.g., "Brain Tumor Symptoms"). Do not explain."""
+Instruction: Extract ONLY the absolute core 2-5 medical keywords to query a clinical database.
+Rule 1: If the user says "it", "this", or "them", they are referring to the Context Disease or previous conversation. Resolve the pronoun! (e.g., "Can we prevent it?" -> "Cardiovascular Disease Prevention").
+Rule 2: Never use complete sentences. Produce ONLY the 2-5 keyword search string. Do not explain.
+"""
 
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
@@ -70,7 +70,7 @@ Respond ONLY with a 2-5 word keyword search string (e.g., "Brain Tumor Symptoms"
                     return s_query
     except Exception as e:
         print("Query expansion failed", e)
-    return query
+    return f"{disease} {query}".strip()
 
 
 async def fetch_openalex(session: aiohttp.ClientSession, search_term: str) -> List[dict]:
@@ -104,7 +104,6 @@ async def fetch_openalex(session: aiohttp.ClientSession, search_term: str) -> Li
 
 async def fetch_clinicaltrials(session: aiohttp.ClientSession, search_term: str) -> List[dict]:
     try:
-        # Intelligent Retrieval: Using query.term instead of cond for broader semantic matching and pulling larger pool (15) for Re-Ranking
         url = f"https://clinicaltrials.gov/api/v2/studies?query.term={search_term}&pageSize=15&sort=@Relevance"
         async with session.get(url, timeout=10) as response:
              if response.status == 200:
@@ -149,7 +148,6 @@ async def fetch_clinicaltrials(session: aiohttp.ClientSession, search_term: str)
                              "contact": contact_info
                          }
                      })
-                 # Re-ranking: enforce diverse trial data and cap to 3 high-relevance trials
                  return results[:3]
     except Exception as e:
         print(f"ClinicalTrials Error: {e}")
@@ -168,11 +166,11 @@ New User Query: {query}
 Recent Research Fetched:
 {context_texts}
 
-Task: Answer the user's latest query as a conversational and empathetic AI medical assistant.
+Task: Answer the user's latest query using highly accurate medical facts.
 Rule 1: Use the 'Recent Research Fetched' to ground your answer if it corresponds to the query.
-Rule 2: If the attached research is irrelevant or null, use your overarching medical knowledge to answer the query directly! Do NOT apologize for the research lacking the answer. Just flawlessly answer the medical question.
-Rule 3: Start your response with a direct, conversational, human-like answer in 1-2 sentences. Ensure this is the very first line of your output.
-Rule 4: MUST HIT ENTER AFTER YOUR INTRO so facts are on a completely new line. Then provide exactly 2 to 3 concise bullet points containing the medical facts, starting each strictly with a dash and a new line (\\n-)."""
+Rule 2: If the attached research is irrelevant or null, use your overarching medical knowledge to answer the query directly.
+Rule 3: Provide exactly 3 to 4 concise medical bullet points. Do NOT include any conversational introduction or filler text. Start your entire response directly with the first bullet point (starting with a dash).
+Rule 4: MUST HIT ENTER to place every single bullet point on a brand new line."""
     
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
