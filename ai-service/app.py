@@ -44,10 +44,7 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "phi3")
 
 async def expand_query_with_llm(session: aiohttp.ClientSession, disease: str, query: str, history: List[Message]) -> str:
-    if not history:
-        return f"{disease} {query}".strip()
-        
-    hist_text = "\n".join([f"{m.role}: {m.content}" for m in history[-3:]])
+    hist_text = "\n".join([f"{m.role}: {m.content}" for m in history[-3:]]) if history else "Start of conversation."
     prompt = f"""You are an expert medical librarian. 
 Disease focus: {disease}
 Recent Conversation:
@@ -55,8 +52,9 @@ Recent Conversation:
 User's Latest Query: {query}
 
 Instruction: Extract the CORE medical conditions and treatments to form a database search query. 
+IMPORTANT: If the User's Latest Query is about a completely different disease than the Disease Focus, completely ignore the Disease Focus! Focus entirely on the User's Latest Query.
 Do NOT include conversational words like "show", "tell me", "research", "clinical", "trials", or "find".
-Respond ONLY with a 2-5 word keyword search string (e.g., "Lung Cancer Vitamin D"). Do not explain."""
+Respond ONLY with a 2-5 word keyword search string (e.g., "Brain Tumor Symptoms"). Do not explain."""
 
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
@@ -72,7 +70,7 @@ Respond ONLY with a 2-5 word keyword search string (e.g., "Lung Cancer Vitamin D
                     return s_query
     except Exception as e:
         print("Query expansion failed", e)
-    return f"{disease} {query}".strip()
+    return query
 
 
 async def fetch_openalex(session: aiohttp.ClientSession, search_term: str) -> List[dict]:
@@ -173,8 +171,8 @@ Recent Research Fetched:
 Task: Answer the user's latest query as a conversational and empathetic AI medical assistant.
 Rule 1: Use the 'Recent Research Fetched' to ground your answer if it corresponds to the query.
 Rule 2: If the attached research is irrelevant or null, use your overarching medical knowledge to answer the query directly! Do NOT apologize for the research lacking the answer. Just flawlessly answer the medical question.
-Rule 3: Start your response with a direct, conversational, human-like answer in 1-2 sentences (e.g. 'Yes, there are several ways we can prevent this,' or 'While it is difficult...'). Ensure this is the very first line of your output.
-Rule 4: Follow your intro with exactly 2 to 3 concise, highly accurate bullet points containing the medical facts, starting each with a dash."""
+Rule 3: Start your response with a direct, conversational, human-like answer in 1-2 sentences. Ensure this is the very first line of your output.
+Rule 4: MUST HIT ENTER AFTER YOUR INTRO so facts are on a completely new line. Then provide exactly 2 to 3 concise bullet points containing the medical facts, starting each strictly with a dash and a new line (\\n-)."""
     
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
@@ -186,6 +184,10 @@ Rule 4: Follow your intro with exactly 2 to 3 concise, highly accurate bullet po
             if response.status == 200:
                 data = await response.json()
                 text = data.get("response", "")
+                
+                # Enforce clean separation even if LLM slightly messes up newlines
+                text = text.replace(' - ', '\n- ')
+                
                 insights = [line.strip('- *') for line in text.split('\n') if len(line.strip()) > 10]
                 return insights[:5]
     except Exception as e:
