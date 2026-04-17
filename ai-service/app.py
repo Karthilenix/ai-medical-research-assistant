@@ -44,17 +44,17 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "phi3")
 
 async def expand_query_with_llm(session: aiohttp.ClientSession, disease: str, query: str, history: List[Message]) -> str:
-    hist_text = "\n".join([f"{m.role}: {m.content}" for m in history[-3:]]) if history else "Start of conversation."
-    prompt = f"""You are a strict medical search keyword generator.
+    prompt = f"""You are a rigid medical search formatter.
 Context Disease: {disease}
-Recent Conversation:
-{hist_text}
 Latest User Query: {query}
 
-Instruction: Extract ONLY the absolute core 2-5 medical keywords to query a clinical database.
-Rule 1: If the user says "it", "this", or "them", they are referring to the Context Disease or previous conversation. Resolve the pronoun! (e.g., "Can we prevent it?" -> "Cardiovascular Disease Prevention").
-Rule 2: Never use complete sentences. Produce ONLY the 2-5 keyword search string. Do not explain.
-"""
+Instruction: You must translate the user's query into a strict 2-3 word search phrase.
+Format: [Disease] [Specific Topic]
+Example 1: Query="Can we prevent it?", Disease="Cardiovascular" -> "Cardiovascular Prevention"
+Example 2: Query="What are the symptoms?", Disease="Brain Tumor" -> "Brain Tumor Symptoms"
+Example 3: Query="How is it treated?", Disease="Diabetes" -> "Diabetes Treatment"
+
+Output EXACTLY AND ONLY the translated search phrase. No conversational words, no quotes, no period."""
 
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
@@ -168,9 +168,10 @@ Recent Research Fetched:
 
 Task: Answer the user's latest query using highly accurate medical facts.
 Rule 1: Use the 'Recent Research Fetched' to ground your answer if it corresponds to the query.
-Rule 2: If the attached research is irrelevant or null, use your overarching medical knowledge to answer the query directly.
-Rule 3: Provide exactly 3 to 4 concise medical bullet points. Do NOT include any conversational introduction or filler text. Start your entire response directly with the first bullet point (starting with a dash).
-Rule 4: MUST HIT ENTER to place every single bullet point on a brand new line."""
+Rule 2: If the attached research is irrelevant, use your overarching medical knowledge.
+Rule 3: YOU MUST ONLY OUTPUT BULLET POINTS. No introductory sentences, no greetings, no conclusions.
+Rule 4: Output exactly 3 medical facts. Each fact must start with a "-" and be pushed to a brand new line. Do not combine them.
+"""
     
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
