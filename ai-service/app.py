@@ -170,10 +170,11 @@ New User Query: {query}
 Recent Research Fetched:
 {context_texts}
 
-Task: Answer the user's latest query accurately. 
+Task: Answer the user's latest query as a conversational and empathetic AI medical assistant.
 Rule 1: Use the 'Recent Research Fetched' to ground your answer if it corresponds to the query.
 Rule 2: If the attached research is irrelevant or null, use your overarching medical knowledge to answer the query directly! Do NOT apologize for the research lacking the answer. Just flawlessly answer the medical question.
-Rule 3: Provide exactly 3 concise, highly accurate bullet points, starting each with a dash."""
+Rule 3: Start your response with a direct, conversational, human-like answer in 1-2 sentences (e.g. 'Yes, there are several ways we can prevent this,' or 'While it is difficult...'). Ensure this is the very first line of your output.
+Rule 4: Follow your intro with exactly 2 to 3 concise, highly accurate bullet points containing the medical facts, starting each with a dash.
     
     try:
         headers = { "ngrok-skip-browser-warning": "true" }
