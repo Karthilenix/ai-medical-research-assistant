@@ -9,6 +9,8 @@ const InsightsPanel: React.FC<{ insights: string[] }> = ({ insights }) => {
         <div className="bg-blue-600 p-2 rounded-xl shadow-md">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
         </div>
+        <h2 className="text-lg font-bold text-gray-900">AI-Generated Insights</h2>
+      </div>
       <ul className="space-y-3">
         {insights.map((insight, index) => (
           <li key={index} className="flex items-start gap-3 text-sm text-gray-700 bg-white/60 p-3 rounded-lg backdrop-blur-sm border border-white/40">
