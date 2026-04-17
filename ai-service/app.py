@@ -73,9 +73,12 @@ Output EXACTLY AND ONLY the translated search phrase. No conversational words, n
     return f"{disease} {query}".strip()
 
 
+import urllib.parse
+
 async def fetch_openalex(session: aiohttp.ClientSession, search_term: str) -> List[dict]:
     try:
-        url = f"https://api.openalex.org/works?search={search_term}&per-page=5&sort=publication_year:desc"
+        safe_term = urllib.parse.quote_plus(search_term)
+        url = f"https://api.openalex.org/works?search={safe_term}&per-page=5"
         async with session.get(url, timeout=10) as response:
             if response.status == 200:
                 data = await response.json()
