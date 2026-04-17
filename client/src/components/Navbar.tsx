@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
           </Link>
           <div className="flex gap-6 items-center">
             <Link to="/" className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">Home</Link>
-            <Link to="/dashboard" className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">Dashboard</Link>
+            <Link to="/dashboard" className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">About Us</Link>
             {user ? (
                <div className="flex items-center gap-4 ml-2 border-l border-gray-200 pl-4">
                  <span className="text-sm font-bold text-gray-800">Hello, {user.username}! ✨</span>
