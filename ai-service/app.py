@@ -62,7 +62,7 @@ Output EXACTLY AND ONLY the translated search phrase. No conversational words, n
             "model": OLLAMA_MODEL,
             "prompt": prompt,
             "stream": False
-        }, headers=headers, timeout=10) as response:
+        }, headers=headers, timeout=45) as response:
             if response.status == 200:
                 data = await response.json()
                 s_query = data.get("response", "").strip(' \n"\'')
@@ -182,7 +182,7 @@ Rule 4: Output exactly 3 medical facts. Each fact must start with a "-" and be p
             "model": OLLAMA_MODEL,
             "prompt": prompt,
             "stream": False
-        }, headers=headers, timeout=25) as response:
+        }, headers=headers, timeout=60) as response:
             if response.status == 200:
                 data = await response.json()
                 text = data.get("response", "")

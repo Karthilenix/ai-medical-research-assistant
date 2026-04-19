@@ -34,7 +34,7 @@ exports.processQuery = async (req, res) => {
                 query,
                 location,
                 history: history || []
-            }, { timeout: 35000 }); // Enforce timeout so it doesn't hang forever
+            }, { timeout: 90000 }); // Enforce longer timeout for laptop cold starts
             
             const resultData = response.data;
             
